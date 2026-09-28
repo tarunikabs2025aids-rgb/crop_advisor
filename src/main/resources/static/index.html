@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropAdvisor - Crop Disease Advisory Ticketing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div>
+        <h1>CropAdvisor</h1>
+        <p>Crop Disease Query and Advisory Ticketing System</p>
+    </div>
+</header>
+
+<nav class="navbar">
+    <button onclick="showSection('dashboard')">Dashboard</button>
+    <button onclick="showSection('regions')">Regions</button>
+    <button onclick="showSection('farmers')">Farmers</button>
+    <button onclick="showSection('officers')">Officers</button>
+    <button onclick="showSection('tickets')">Tickets</button>
+</nav>
+
+<main class="container">
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section id="dashboard" class="section active">
+
+        <h2>Dashboard</h2>
+
+        <div class="dashboard-cards">
+
+            <div class="card">
+                <h3>Regions</h3>
+                <p id="totalRegions">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Officers</h3>
+                <p id="totalOfficers">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Tickets</h3>
+                <p id="totalTickets">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Open Tickets</h3>
+                <p id="openTickets">0</p>
+            </div>
+
+            <div class="card danger-card">
+                <h3>Escalated &gt; 48h</h3>
+                <p id="escalatedTickets">0</p>
+            </div>
+
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <h3>How it works</h3>
+
+                <ol>
+                    <li>
+                        Farmer raises a ticket with crop and symptom details.
+                    </li>
+
+                    <li>
+                        System automatically assigns an active officer
+                        from the farmer's region.
+                    </li>
+
+                    <li>
+                        Assigned officer gives a recommendation and
+                        closes the ticket.
+                    </li>
+
+                    <li>
+                        Farmer can reopen a closed ticket if the issue persists.
+                    </li>
+
+                    <li>
+                        Tickets pending for more than 48 hours are marked
+                        as escalated.
+                    </li>
+                </ol>
+
+            </div>
+
+            <div class="info-box">
+
+                <h3>Business Rules</h3>
+
+                <ul>
+                    <li>
+                        Only the assigned officer can close a ticket.
+                    </li>
+
+                    <li>
+                        Only the ticket-owning farmer can reopen it.
+                    </li>
+
+                    <li>
+                        Reopening resets the 48-hour resolution timer.
+                    </li>
+
+                    <li>
+                        A ticket cannot be created when no active officer
+                        exists in its region.
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= REGIONS ================= -->
+
+    <section id="regions" class="section">
+
+        <h2>Regions</h2>
+
+        <div class="form-card">
+
+            <h3>Add Region</h3>
+
+            <form id="regionForm">
+
+                <input
+                        type="text"
+                        id="regionName"
+                        placeholder="Region Name"
+                        required
+                >
+
+                <button type="submit">
+                    Add Region
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <h3>Region List</h3>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Region Name</th>
+                        <th>Action</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="regionTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FARMERS ================= -->
+
+    <section id="farmers" class="section">
+
+        <h2>Farmers</h2>
+
+        <div class="form-card">
+
+            <h3>Register Farmer</h3>
+
+            <form id="farmerForm">
+
+                <input
+                        type="text"
+                        id="farmerName"
+                        placeholder="Farmer Name"
+                        required
+                >
+
+                <input
+                        type="email"
+                        id="farmerEmail"
+                        placeholder="Email"
+                        required
+                >
+
+                <input
+                        type="text"
+                        id="farmerPhone"
+                        placeholder="Phone Number"
+                        required
+                >
+
+                <select id="farmerRegionId" required>
+
+                    <option value="">
+                        Select Region
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    Register Farmer
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <h3>Farmer List</h3>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Region</th>
+                        <th>Action</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="farmerTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= OFFICERS ================= -->
+
+    <section id="officers" class="section">
+
+        <h2>Officers</h2>
+
+        <div class="form-card">
+
+            <h3>Register Agriculture Officer</h3>
+
+            <form id="officerForm">
+
+                <input
+                        type="text"
+                        id="officerName"
+                        placeholder="Officer Name"
+                        required
+                >
+
+                <input
+                        type="email"
+                        id="officerEmail"
+                        placeholder="Email"
+                        required
+                >
+
+                <input
+                        type="text"
+                        id="officerPhone"
+                        placeholder="Phone Number"
+                        required
+                >
+
+                <select id="officerRegionId" required>
+
+                    <option value="">
+                        Select Region
+                    </option>
+
+                </select>
+
+                <label class="checkbox-label">
+
+                    <input
+                            type="checkbox"
+                            id="officerActive"
+                            checked
+                    >
+
+                    Active Officer
+
+                </label>
+
+                <button type="submit">
+                    Register Officer
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <h3>Officer List</h3>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Region</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="officerTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= TICKETS ================= -->
+
+    <section id="tickets" class="section">
+
+        <h2>Advisory Tickets</h2>
+
+        <div class="form-card">
+
+            <h3>Raise Advisory Ticket</h3>
+
+            <p class="form-note">
+                The system automatically assigns an active agriculture officer
+                from the farmer's region.
+            </p>
+
+            <form id="ticketForm">
+
+                <select id="ticketFarmerId" required>
+
+                    <option value="">
+                        Select Farmer
+                    </option>
+
+                </select>
+
+
+                <input
+                        type="text"
+                        id="ticketCrop"
+                        placeholder="Crop Name"
+                        required
+                >
+
+
+                <textarea
+                        id="ticketSymptoms"
+                        placeholder="Describe crop symptoms"
+                        rows="4"
+                        required
+                ></textarea>
+
+
+                <input
+                        type="text"
+                        id="ticketPhotoReference"
+                        placeholder="Photo Reference (URL or file name - optional)"
+                >
+
+
+                <button type="submit">
+                    Raise Ticket
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <div class="table-heading">
+
+                <h3>Ticket List</h3>
+
+                <button
+                        class="secondary-button"
+                        onclick="loadAllData()"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Farmer</th>
+                        <th>Region</th>
+                        <th>Crop</th>
+                        <th>Symptoms</th>
+                        <th>Photo Ref.</th>
+                        <th>Assigned Officer</th>
+                        <th>Status</th>
+                        <th>Timer</th>
+                        <th>Escalation</th>
+                        <th>Recommendation</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="ticketTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= MESSAGE BOX ================= -->
+
+<div id="messageBox"></div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

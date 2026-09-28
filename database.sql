@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS cropadvisor;
+
+USE cropadvisor;
+
+SHOW TABLES;
